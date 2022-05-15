@@ -5,7 +5,6 @@ use rocket::*;
 use rocket_contrib::json::Json;
 use rusqlite::Connection;
 use serde::Serialize;
-//use serde_json::json;
 use rand::*;
 
 #[derive(Serialize, Debug)]
@@ -32,7 +31,7 @@ fn index() -> &'static str {
 }
 
 
-// POST item into DB endpoint
+// POST a number of items into DB endpoint
 #[post("/item/<item_id>/<quantity>/<table_num>")]
 fn add_item(item_id: i64, quantity:i64, table_num: i64) -> Result<Json<StatusMessage>, String> {
     let t = rand::thread_rng().gen_range(5..16);
@@ -54,16 +53,14 @@ fn add_item(item_id: i64, quantity:i64, table_num: i64) -> Result<Json<StatusMes
                 item_id integer primary key,
                 quantity integer not null,
                 prep_time integer not null
-            );", table_num),
-                rusqlite::NO_PARAMS,
-            )
-            .unwrap();
+            );", table_num), rusqlite::NO_PARAMS).unwrap();
     
     let mut statement =
-        match db_connection.prepare(&format!("insert into table_{} (item_id, prep_time) values
-        ({},{});", table_num, item_id, t)) {
-            Ok(statement) => statement,
-            Err(_) => return Err("Failed to prepare query".into()),
+        match db_connection.prepare(&format!("insert into table_{} (item_id, quantity, prep_time) values
+        ({},{},{}) on conflict(item_id) do update set quantity = quantity + {};"
+            , table_num, item_id, quantity, t, quantity)) {
+                Ok(statement) => statement,
+                Err(_) => return Err("Failed to prepare query".into()),
         };
     
     let results = statement.execute(rusqlite::NO_PARAMS);
@@ -94,7 +91,7 @@ fn get_all_items(table_num: i64) -> Result<Json<ItemList>, String> {
 
     // Prepares SQL statement for the GET query
     let mut statement = match db_connection
-        .prepare(&format!("select item_id, prep_time from table_{}", table_num)) {
+        .prepare(&format!("select item_id, quantity, prep_time from table_{}", table_num)) {
             Ok(statement) => statement,
             Err(_) => return Err("Failed to prepare query".into()),
         };
@@ -103,7 +100,8 @@ fn get_all_items(table_num: i64) -> Result<Json<ItemList>, String> {
     let results = statement.query_map(rusqlite::NO_PARAMS, |row| {
         Ok(Item {
             item_id: row.get(0)?,
-            prep_time: row.get(1)?,
+            quantity: row.get(1)?,
+            prep_time: row.get(2)?,
         })
     });
 
@@ -123,8 +121,6 @@ fn get_all_items(table_num: i64) -> Result<Json<ItemList>, String> {
         
         Err(_) => Err((&format!("Failed to fetch menu items for table_{}", table_num)).into()),
     }
-    
-
 }
 
 
