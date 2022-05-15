@@ -1,5 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+// Imports
 extern crate rocket;
 use rocket::*;
 use rocket_contrib::json::Json;
@@ -8,15 +9,12 @@ use serde::Serialize;
 use rand::*;
 
 #[derive(Serialize, Debug)]
-/*
-Every item on the menu is an Item instance. item_id is the unique identifier, quantity is the number
-of orders for that item present at the table, and prep_time is the preparation time needed before
-the item is ready to be served
-*/  
+
+// Every item on the menu is an Item instance.
 struct Item {
-    item_id: i64,
-    quantity: i64,
-    prep_time: i64,
+    item_id: i64,   // uniquely identifies every menu item
+    quantity: i64,  // quantity of each item ordered at a table
+    prep_time: i64, // time (minutes) taken for preparation of menu item
 }
 
 /*
@@ -38,14 +36,18 @@ struct StatusMessage {
 // 0. Home page
 #[get("/")]
 fn index() -> &'static str {
+    // Prints out "to the browser page"
     "Welcome!"
 }
 
 // 1. POST a number of items into table endpoint
 #[post("/item/<item_id>/<quantity>/<table_num>")]
 fn add_item(item_id: i64, quantity:i64, table_num: i64) -> Result<Json<StatusMessage>, String> {
-    let t = rand::thread_rng().gen_range(5..16); //generates random number from 5-15
 
+    //generates random number from 5-15
+    let t = rand::thread_rng().gen_range(5..16); 
+
+    // Connects to the database
     let db_connection = match Connection::open("data.sqlite") {
         Ok(connection) => connection,
         Err(_) => {
@@ -53,6 +55,7 @@ fn add_item(item_id: i64, quantity:i64, table_num: i64) -> Result<Json<StatusMes
         }
     };
 
+    // Ensures that the table that waiter is serving exists in the database
     db_connection
             .execute(&format!("create table if not exists table_{} (
                 item_id integer primary key,
@@ -60,6 +63,7 @@ fn add_item(item_id: i64, quantity:i64, table_num: i64) -> Result<Json<StatusMes
                 prep_time integer not null
             );", table_num), rusqlite::NO_PARAMS).unwrap();
     
+    // Preparing the SQLite statement for table entry
     let mut statement =
         match db_connection.prepare(&format!("insert into table_{} (item_id, quantity, prep_time) values
         ({},{},{}) on conflict(item_id) do update set quantity = quantity + {};"
@@ -68,8 +72,10 @@ fn add_item(item_id: i64, quantity:i64, table_num: i64) -> Result<Json<StatusMes
                 Err(_) => return Err("Failed to prepare query".into()),
         };
     
+    // Executing the SQLite statement
     let results = statement.execute(rusqlite::NO_PARAMS);
 
+    // Matching the results from the SQLite execution to ensure API behaved as expected
     match results {
         Ok(rows_affected) => Ok(Json(StatusMessage {
             message: format!("{} menu item inserted!", rows_affected),
@@ -81,6 +87,8 @@ fn add_item(item_id: i64, quantity:i64, table_num: i64) -> Result<Json<StatusMes
 // 2. DEL an item from a table endpoint
 #[delete("/item/<item_id>/<table_num>")]
 fn delete_item(item_id: i64, table_num: i64) -> Result<Json<StatusMessage>, String> {
+
+    // Connecting to the Database
     let db_connection = match Connection::open("data.sqlite") {
         Ok(connection) => connection,
         Err(_) => {
@@ -88,13 +96,16 @@ fn delete_item(item_id: i64, table_num: i64) -> Result<Json<StatusMessage>, Stri
         }
     };
     
+    // Preparing the SQlite statement
     let mut statement = match db_connection.prepare(&format!("delete from table_{} where item_id = {};", table_num, item_id)) {
         Ok(statement) => statement,
         Err(_) => return Err("Failed to prepare query".into()),
     };
 
+    // Executing the SQlite statement
     let results = statement.execute(rusqlite::NO_PARAMS);
 
+    // Matching results to ensure that Deletion statement did in fact execute as expected
     match results {
         Ok(rows_affected) => Ok(Json(StatusMessage {
             message: format!("{} menu item deleted!", rows_affected),
@@ -123,7 +134,10 @@ fn get_all_items(table_num: i64) -> Result<Json<ItemList>, String> {
             Err(_) => return Err("Failed to prepare query".into()),
         };
 
-    // Accumulates all the rows from the table into a query map
+    /*
+    Rusqlite QueryMap function is a mapping function that first executes the SQlite statement. The rows that are 
+    returned from the SQlite statement execution are then mapped over and row elements are inserted into a iterable
+    */
     let results = statement.query_map(rusqlite::NO_PARAMS, |row| {
         Ok(Item {
             item_id: row.get(0)?,
@@ -132,11 +146,10 @@ fn get_all_items(table_num: i64) -> Result<Json<ItemList>, String> {
         })
     });
 
-    // 
+    // Takes the iterable return type from the QueryMap function and stores it into a collection (Vector in this case)
     match results {
         Ok(rows) => {
             let collection: rusqlite::Result<Vec<_>> = rows.collect();
-
             match collection {
                 Ok(items) => {
                     println!("{:?}", items);
@@ -145,7 +158,6 @@ fn get_all_items(table_num: i64) -> Result<Json<ItemList>, String> {
                 Err(_) => Err("Could not collect items".into()),
             }
         }
-        
         Err(_) => Err((&format!("Failed to fetch menu items for table_{}", table_num)).into()),
     }
 }
@@ -200,6 +212,8 @@ fn get_specific_item(table_num: i64, item_id: i64) -> Result<Json<ItemList>, Str
 // 5. UPDATE quantity of some specified item 
 #[put("/item/<table_num>/<item_id>/<new_quantity>")]
 fn update_quantity(item_id: i64, table_num: i64, new_quantity: i64) -> Result<Json<StatusMessage>, String> {
+
+    // Connecting to database
     let db_connection = match Connection::open("data.sqlite") {
         Ok(connection) => connection,
         Err(_) => {
@@ -207,6 +221,7 @@ fn update_quantity(item_id: i64, table_num: i64, new_quantity: i64) -> Result<Js
         }
     };
 
+    // Preparing SQLite statement
     let mut statement =
         match db_connection.prepare(&format!("update table_{} 
             set quantity = {}
@@ -214,15 +229,17 @@ fn update_quantity(item_id: i64, table_num: i64, new_quantity: i64) -> Result<Js
                 Ok(statement) => statement,
                 Err(_) => return Err("Failed to prepare query".into()),
         };
+    
+    // Executing SQLite statement
+    let results = statement.execute(rusqlite::NO_PARAMS);
 
-        let results = statement.execute(rusqlite::NO_PARAMS);
-
-        match results {
-            Ok(rows_affected) => Ok(Json(StatusMessage {
-                message: format!("{} row updated!", rows_affected),
-            })),
-            Err(_) => Err("Failed to update table".into()),
-        }
+    // Matching the result of the previous execution to ensure that the SQLite column has been updated
+    match results {
+        Ok(rows_affected) => Ok(Json(StatusMessage {
+            message: format!("{} row updated!", rows_affected),
+        })),
+        Err(_) => Err("Failed to update table".into()),
+    }
 }
 
 
@@ -273,5 +290,4 @@ mod test {
         let mut response = client.get("/item/1/1").dispatch();
         assert_eq!(response.status(), Status::Ok);
     }
-
 }
