@@ -290,4 +290,27 @@ mod test {
         let mut response = client.get("/item/1/1").dispatch();
         assert_eq!(response.status(), Status::Ok);
     }
+
+    #[test]
+    fn test_delete_item() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        client.post("/item/1/1/1").dispatch();
+        let mut response = client.delete("/item/1/1").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[test]
+    fn test_add_item() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let mut response = client.post("/item/1/1/101").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(response.body_string(), Some("{\"message\":\"1 menu item inserted!\"}".into()));
+    }
+
+    #[test]
+    fn test_update_quantity() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let mut response = client.put("/item/1/1/1").dispatch();
+        assert_eq!(response.status(), Status::Ok);  
+    }
 }
