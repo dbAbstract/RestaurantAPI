@@ -3,7 +3,7 @@ A Rust API created using the Rocket framework with a SQLite database. Handles re
 
 **How to run the application:**
 
-
+**API Routes:**
 
 **Assumptions & Notes:**
 
