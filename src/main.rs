@@ -8,9 +8,8 @@ use rusqlite::Connection;
 use serde::Serialize;
 use rand::*;
 
-#[derive(Serialize, Debug)]
-
 // Every item on the menu is an Item instance.
+#[derive(Serialize, Debug)]
 struct Item {
     item_id: i64,   // uniquely identifies every menu item
     quantity: i64,  // quantity of each item ordered at a table
