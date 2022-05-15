@@ -146,6 +146,51 @@ fn get_all_items(table_num: i64) -> Result<Json<ItemList>, String> {
 }
 
 // 4. GET specified item 
+#[get("/item/<table_num>/<item_id>")]
+fn get_specific_item(table_num: i64, item_id: i64) -> Result<Json<ItemList>, String>{
+
+        // Connecting to database
+        let db_connection = match Connection::open("data.sqlite") {
+            Ok(connection) => connection,
+            Err(_) => {
+                return Err(String::from("Failed to connect to database"));
+            }
+        };
+
+        // Prepares SQL statement for the GET query
+        let mut statement = match db_connection
+        .prepare(&format!("select item_id, quantity, prep_time 
+            from table_{} where item_id = {}", table_num, item_id)) {
+                Ok(statement) => statement,
+                Err(_) => return Err("Failed to prepare query".into()),
+        };
+
+            // Accumulates all the rows from the table into a query map
+        let results = statement.query_map(rusqlite::NO_PARAMS, |row| {
+        Ok(Item {
+            item_id: row.get(0)?,
+            quantity: row.get(1)?,
+            prep_time: row.get(2)?,
+        })
+        });
+        // 
+        match results {
+            Ok(rows) => {
+                let collection: rusqlite::Result<Vec<_>> = rows.collect();
+
+                match collection {
+                    Ok(items) => {
+                        println!("{:?}", items);
+                        return Ok(Json(ItemList { items }));
+                    },
+                    Err(_) => Err("Could not collect items".into()),
+                }
+            }
+            
+            Err(_) => Err((&format!("Failed to fetch menu items for table_{}", table_num)).into()),
+        }
+}
+
 
 // 5. UPDATE quantity of some specified item 
 
@@ -159,7 +204,7 @@ fn main() {
     rocket::ignite()
     .mount(
         "/",
-        routes![index, get_all_items, add_item, delete_item]
+        routes![index, get_all_items, add_item, delete_item, get_specific_item]
     )
     .launch();
 }
