@@ -1,5 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
+extern crate rocket;
 use rocket::*;
 use rocket_contrib::json::Json;
 use rusqlite::Connection;
@@ -24,7 +25,7 @@ are retrieved from the database.
 */
 #[derive(Serialize, Debug)]
 struct ItemList {
-    items: Vec<Item>
+    items: Vec<Item> 
 }
 
 #[derive(Serialize)]
@@ -236,4 +237,41 @@ fn main() {
         routes![index, get_all_items, add_item, delete_item, get_specific_item, update_quantity]
     )
     .launch();
+}
+
+// Instantiates an instance of a Rocket HTTP Server for testing purposes
+fn rocket() -> rocket::Rocket {
+    rocket::ignite()
+        .mount("/"
+        , routes![index, get_all_items, add_item, delete_item, get_specific_item, update_quantity])
+}
+
+// Unit Testing the endpoints
+#[cfg(test)]
+mod test {
+    use super::*;
+    use rocket::local::Client;
+    use rocket::http::Status;
+
+    #[test]
+    fn test_index() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let mut response = client.get("/").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(response.body_string(), Some("Welcome!".into()));
+    }
+    #[test]
+    fn test_get_all_items() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let mut response = client.get("/item/1").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[test]
+    fn test_get_specific_items() {
+        let client = Client::new(rocket()).expect("valid rocket instance");
+        let mut response = client.get("/item/1/1").dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+
 }
