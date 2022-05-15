@@ -1,6 +1,6 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
-extern crate serde_json;
+
 use rocket::{*, http::Status};
 use rocket_contrib::json::Json;
 use rusqlite::Connection;
@@ -193,7 +193,32 @@ fn get_specific_item(table_num: i64, item_id: i64) -> Result<Json<ItemList>, Str
 
 
 // 5. UPDATE quantity of some specified item 
+#[put("/item/<table_num>/<item_id>/<new_quantity>")]
+fn update_quantity(item_id: i64, table_num: i64, new_quantity: i64) -> Result<Json<StatusMessage>, String> {
+    let db_connection = match Connection::open("data.sqlite") {
+        Ok(connection) => connection,
+        Err(_) => {
+            return Err(String::from("Failed to connect to database"));
+        }
+    };
 
+    let mut statement =
+        match db_connection.prepare(&format!("update table_{} 
+            set quantity = {}
+            where item_id = {};", table_num, new_quantity, item_id)) {
+                Ok(statement) => statement,
+                Err(_) => return Err("Failed to prepare query".into()),
+        };
+
+        let results = statement.execute(rusqlite::NO_PARAMS);
+
+        match results {
+            Ok(rows_affected) => Ok(Json(StatusMessage {
+                message: format!("{} row updated!", rows_affected),
+            })),
+            Err(_) => Err("Failed to update table".into()),
+        }
+}
 
 
 
@@ -204,7 +229,7 @@ fn main() {
     rocket::ignite()
     .mount(
         "/",
-        routes![index, get_all_items, add_item, delete_item, get_specific_item]
+        routes![index, get_all_items, add_item, delete_item, get_specific_item, update_quantity]
     )
     .launch();
 }
