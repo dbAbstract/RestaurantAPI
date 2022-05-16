@@ -1,39 +1,64 @@
 # RestaurantAPI
 A Rust REST API created using the Rocket framework with a SQLite database. Handles requests coming from clients (waiters) to handle orders coming in from customers at various tables. Below are the instructions for building, running, and then finally sending requests to the REST API.
 
-**How To Build + Run The Application:**
-1. Clone the repository into your computer. This can be done by downloading the .zip file from GitHub or using the 'git clone' command.
- 
-2. In your command line terminal, navigate to the repository directory in your local machine
+**1. How To Build + Run The Application:**
 
-3. In order to run the a Rust executable, you require the Rustup toolchain. Below is the bash command to install Rustup for Unix-based OS's.
+1.1 Clone the repository into your computer. This can be done by downloading the .zip file from GitHub or using the 'git clone' command.
+ 
+1.2 In your command line terminal, navigate to the repository directory in your local machine
+
+1.3 In order to run the a Rust executable, you require the Rustup toolchain. Below is the bash command to install Rustup for Unix-based OS's.
    
        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
    
    For installation on Windows, go to https://www.rust-lang.org/tools/install and follow the steps to setup Rustup.
 
-4. Once Rustup is installed, you need the Nightly version of the Rust build tools in order to run this application. You can do this by typing in the following in your command terminal.
+1.4 Once Rustup is installed, you need the Nightly version of the Rust build tools in order to run this application. You can do this by typing in the following in your command terminal.
 
        rustup default nightly
        
 Please note that you need Rustup to do so.
 
-5. Once these tools are installed, you are ready to run the program. Rocket applications can be run in 3 modes; dev, staging, and production modes. The thread count for the dev and production modes have been set to 10 (this can be altered in Rocket.toml). By default, Rocket apps are run in dev mode. To run the app in dev mode, simply type the following in the command line.
+1.5 Once these tools are installed, you are ready to run the program. Rocket applications can be run in 3 modes; dev, staging, and production modes. The thread count for the dev and production modes have been set to 10 (this can be altered in Rocket.toml). By default, Rocket apps are run in dev mode. To run the app in dev mode, simply type the following in the command line.
   
        cargo run
        
-This will run the app in dev mode. The compiler does not optimize the binary executable when run in dev mode and thus to run the production version of this app, the following command must be used.
+1.6 This will run the app in dev mode. The compiler does not optimize the binary executable when run in dev mode and thus to run the production version of this app, the following command must be used.
 
        cargo run --release
        
  The Rust compiler now optimizes the binary executable thus resulting in better runtime and performance.
    
- **Sending HTTP requests to Server:**
+ **2. Sending HTTP requests to Server:**
    
- Now that the REST API is running, we can send various requests to it. 
+ Now that the REST API is running, we can send various requests to it. Before you do that, please have a look at the endpoints provided by the API, the parameters you can send through as well as the expected return type and value. I have also provided templates for the HTTP requests that you can send the REST API with examples.
+ 
+2.1 *index( )* | parameters = None | return type = String Splice 
+
+Parameters:
+
+       None
+       
+Returns: String splice
+
+       Welcome! 
+
+Request Syntax for index( ):
+
+       curl localhost:8000/
+       
+Example Request: Accessing localhost (127.0.0.1) on port 8000 which prints the following.
+
+
+       curl localhost:8000/
+       
+2.2 
+       
+ 
+
    
 
-**API Routes & Expected Outputs:**
+
 
 **Assumptions & Notes:**
 
