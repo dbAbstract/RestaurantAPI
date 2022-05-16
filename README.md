@@ -7,7 +7,7 @@ To briefly cover the structure of the system. This application, as mentioned abo
 
 The database stores the various orders for each table in the restaurant in the following manner. When customers are seated at a table, they are attended to by waitstaff. The waitstaff takes the customer's orders and pushes it to the database. For eg. If the waiter is serving some table labelled by the restaurant as **Table T** then when the waitstaff sends a POST request to the database for **Table T**, the API creates a SQLite table in the database called **table_T**. If the table already exists, then it simply updates the pre-existing orders contained in the table. The behaviour of the endpoints will be elaborated further upon. 
 
-Regarding the menu items being inserted to and queried from the database, Rust is a bit different to trational OOP based languages and so I have made the syntax generic to any language background.
+Regarding the menu items being inserted to and queried from the database, Rust is a bit different to traditional OOP based languages and so I have made the syntax generic to any language background.
 
        public class Item {
            int item_id;   // Primary id for each menu item.
