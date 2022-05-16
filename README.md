@@ -3,7 +3,35 @@ A Rust API created using the Rocket framework with a SQLite database. Handles re
 
 **How To Build + Run The Application:**
 1. clone the repository into your computer.
-2. In your command line terminal, naviagate 
+ 
+2. In your command line terminal, navigate to the repository directory in your local machine
+
+3. In order to run the a Rust executable, you require the Rustup toolchain. Below is the bash command to install Rustup for Unix-based OS's.
+   
+       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   
+   For installation on Windows, go to https://www.rust-lang.org/tools/install and follow the steps to setup Rustup.
+
+4. Once Rustup is installed, you need the Nightly version of the Rust build tools in order to run this application. You can do this by typing in the following in your command terminal.
+
+       rustup default nightly
+       
+Please note that you need Rustup to do so.
+
+5. Once these tools are installed, you are ready to run the program. Rocket applications can be run in 3 modes; dev, staging, and production modes. The thread count for the dev and production modes have been set to 10 (this can be altered in Rocket.toml). By default, Rocket apps are run in dev mode. To run the app in dev mode, simply type the following in the command line.
+  
+       cargo run
+       
+This will run the app in dev mode. The compiler does not optimize the binary executable when run in dev mode and thus to run the production version of this app, the following command must be used.
+
+       cargo run --release
+       
+ The Rust compiler now optimizes the binary executable thus resulting in better runtime and performance.
+   
+ **Sending HTTP requests to Server:**
+   
+   
+   
 
 **API Routes & Expected Outputs:**
 
