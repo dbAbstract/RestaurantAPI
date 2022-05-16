@@ -81,11 +81,11 @@ Returns:
 
 Request Syntax for add_item( ):
 
-       curl localhost:8000/item_id/quantity/table_num
+       curl -X POST localhost:8000/item_id/quantity/table_num
        
 Example Request: Inserting into table_23 a menu item with a unique identifier 33 and with quantity set to 2.
 
-       curl localhost:8000/item/33/2/23
+       curl -X POST localhost:8000/item/33/2/23
 
 2.3 ***delete_item: DELETE***
 
