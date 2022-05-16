@@ -53,7 +53,11 @@ Please note that you need Rustup to do so.
    
  **2. Sending HTTP requests to Server:**
    
- Now that the REST Service is running, we can send various requests to it. Before you do that, please have a look at the endpoints provided by the API, the parameters you can send through as well as the expected return type and value. I have also provided templates for the HTTP requests that you can send the REST API with examples. The curl requests should be sent through your command line terminal. Any request to an IP address you type in your web browser is HTTP GET by default so some of these endpoints may behave unexpectedly or fail outright if you try accessing them via web browser. To simulate concurrent requests to the API, one can open multiple command line terminal instances on their machine and send requests to the API in parallel. 
+ Now that the REST Service is running, we can send various requests to it. Before you do that, please have a look at the endpoints provided by the API, the parameters you can send through as well as the expected return type and value. I have also provided templates for the HTTP requests that you can send the REST API with examples. The curl requests should be sent through your command line terminal. Any request to an IP address you type in your web browser is HTTP GET by default so some of these endpoints may behave unexpectedly or fail outright if you try accessing them via web browser. To simulate concurrent requests to the API, one can open multiple command line terminal instances on their machine and send requests to the API in parallel. Another method is to use the following Bash command:
+ 
+       seq 1 1 | xargs -n1 -P4  curl  "http://localhost:8000/item/1"
+       
+This will send 4 parallel requests (-P flag controls the number of parallel requests) to the endpoint.
  
 2.1 ***index: GET***
 
