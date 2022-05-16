@@ -81,7 +81,7 @@ Returns:
 
 Request Syntax for add_item( ):
 
-       curl -X POST localhost:8000/item_id/quantity/table_num
+       curl -X POST localhost:8000/item/item_id/quantity/table_num
        
 Example Request: Inserting into table_23 a menu item with a unique identifier 33 and with quantity set to 2.
 
@@ -99,13 +99,48 @@ Returns:
 
 Request Syntax for delete_item( ):
 
-       curl -X DELETE localhost:8000/item_id/table_num
+       curl -X DELETE localhost:8000/item/item_id/table_num
        
 Example Request: Deleting item with item_id == 1 from table 12.
 
        curl -X DELETE localhost:8000/item/1/12
        
- 
+2.4 ***get_all_items: GET***
+
+Parameters:
+
+       table_num
+       
+Returns:
+
+       List of Menu Items (displayed in JSON) 
+
+Request Syntax for get_all_items( ):
+
+       curl localhost:8000/item/table_num
+       
+Example Request: get all items for table_1.
+
+       curl localhost:8000/item/1
+       
+2.5 ***get_specific_item: GET***
+
+Parameters:
+
+       table_num, item_id
+       
+Returns:
+
+       List of Menu Items (displayed in JSON, will only contain one Item instance in this endpoint) 
+
+Request Syntax for get_all_items( ):
+
+       curl localhost:8000/item/table_num/item_id
+       
+Example Request: get item 14 from table_11.
+
+       curl localhost:8000/item/11/14
+
 
 
  
