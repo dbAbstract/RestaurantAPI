@@ -15,9 +15,9 @@ Regarding the menu items being inserted to and queried from the database, Rust i
            int prep_time; // Preparation time (minutes) required to cook the item. (random number between 5-15 minutes)
        }
 
-Menu
+Every table can at most have 1 of any item_id.
 
-tl;dr - System contains 1 database with multiple SQLite tables corresponding to the physical tables in the restaurant with naming convention **table_<table_num>**. Every menu
+tl;dr - System contains 1 database with multiple SQLite tables corresponding to the physical tables in the restaurant with naming convention **table_<table_num>**. Every menu item has a unique item_id field, quantity field, and preparation time field (a random number between 5-15). 
 
 **1. How To Build + Run The Application:**
 
