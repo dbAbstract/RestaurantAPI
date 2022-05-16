@@ -57,7 +57,7 @@ Parameters:
 
        None
        
-Returns: String splice
+Returns:
 
        Welcome! 
 
@@ -75,19 +75,39 @@ Parameters:
 
        item_id, quantity, table_num
        
-Returns: String splice
+Returns:
 
        Status Message (displayed in JSON) 
 
-Request Syntax for index( ):
+Request Syntax for add_item( ):
 
        curl localhost:8000/item_id/quantity/table_num
        
-Example Request: Inserting into table table_num a menu item with a unique identifier item_id and with quantity set to quantity.
+Example Request: Inserting into table_23 a menu item with a unique identifier 33 and with quantity set to 2.
 
-       curl localhost:8000/
+       curl localhost:8000/item/33/2/23
 
+2.3 ***delete_item: DELETE***
+
+Parameters:
+
+       item_id, table_num
        
+Returns:
+
+       Status Message (displayed in JSON) 
+
+Request Syntax for delete_item( ):
+
+       curl -X DELETE localhost:8000/item_id/table_num
+       
+Example Request: Deleting item with item_id == 1 from table 12.
+
+       curl -X DELETE localhost:8000/item/1/12
+       
+ 
+
+
  
 
    
