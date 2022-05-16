@@ -41,7 +41,7 @@ Every table can at most have 1 of any item_id.
        
 Please note that you need Rustup to do so.
 
-1.5 Once these tools are installed, you are ready to run the program. Rocket applications can be run in 3 modes; dev, staging, and production modes. The thread count for the dev and production modes have been set to 10 (this can be altered in Rocket.toml). By default, Rocket apps are run in dev mode. To run the app in dev mode, simply type the following in the command line.
+1.5 Once these tools are installed, you are ready to run the program. Rocket applications can be run in 3 modes; dev, staging, and production modes. For this project, I set the worker counts to 10 for production and dev environments (this can be altered in Rocket.toml). By default, Rocket apps are run in dev mode. Once again, please mind the fact that despite the worker config parameter in Rocket.toml, the maximum number of threads your machine will support is (your physical cores x 2) for any modern CPU (Both Intel and Ryzen chips). To run the app in dev mode, type the following in the command line.
   
        cargo run
        
@@ -49,11 +49,11 @@ Please note that you need Rustup to do so.
 
        cargo run --release
        
- The Rust compiler now optimizes the binary executable thus resulting in better runtime and performance.
+ The Rust compiler now rebuilds and optimizes the binary executable thus resulting in better runtime and performance.
    
  **2. Sending HTTP requests to Server:**
    
- Now that the REST API is running, we can send various requests to it. Before you do that, please have a look at the endpoints provided by the API, the parameters you can send through as well as the expected return type and value. I have also provided templates for the HTTP requests that you can send the REST API with examples.
+ Now that the REST Service is running, we can send various requests to it. Before you do that, please have a look at the endpoints provided by the API, the parameters you can send through as well as the expected return type and value. I have also provided templates for the HTTP requests that you can send the REST API with examples. The curl requests should be sent through your command line terminal. Any request to an IP address you type in your web browser is HTTP GET by default so some of these endpoints may behave unexpectedly or fail outright if you try accessing them via web browser. 
  
 2.1 ***index: GET***
 
