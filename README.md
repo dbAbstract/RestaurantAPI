@@ -1,5 +1,5 @@
 # RestaurantAPI
-A Rust REST API created using the Rocket framework with a SQLite database. Handles requests coming from clients (waiters) to handle orders coming in from customers at various tables.
+A Rust REST API created using the Rocket framework with a SQLite database. Handles requests coming from clients (waiters) to handle orders coming in from customers at various tables. Below are the instructions for building, running, and then finally sending requests to the REST API.
 
 **How To Build + Run The Application:**
 1. Clone the repository into your computer. This can be done by downloading the .zip file from GitHub or using the 'git clone' command.
@@ -30,7 +30,7 @@ This will run the app in dev mode. The compiler does not optimize the binary exe
    
  **Sending HTTP requests to Server:**
    
-   
+ Now that the REST API is running, we can send various requests to it. 
    
 
 **API Routes & Expected Outputs:**
