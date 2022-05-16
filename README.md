@@ -6,7 +6,7 @@ A Rust REST API created using the Rocket framework with a SQLite database. Handl
 
 **System Structure**
 
-tl;dr - System contains 1 database with multiple SQLite tables corresponding to the physical tables in the restaurant with naming convention **table_<table_num>**. Every menu item has a unique item_id field, quantity field, and preparation time field (a random number between 5-15). 
+TL;DR - System contains 1 database with multiple SQLite tables corresponding to the physical tables in the restaurant with naming convention **table_<table_num>**. Every menu item has a unique item_id field, quantity field, and preparation time field (a random number between 5-15). 
 
 To briefly cover the structure of the system. This application, as mentioned above, is an API following the HTTP REST architecture. It can GET, PUT, POST, and DELETE from a database given commands (assumed to be coming in from Frontend elements). The API was created using the Rocket framework and interfaces with a SQLite database. 
 
