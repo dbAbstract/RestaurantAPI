@@ -141,13 +141,24 @@ Example Request: get item 14 from table_11.
 
        curl localhost:8000/item/11/14
 
+2.5 ***update quantity: PUT***
 
+Parameters:
 
- 
+       table_num, item_id, new_quantity
+       
+Returns:
 
-   
+       Status Message (displayed in JSON) 
 
+Request Syntax for get_all_items( ):
 
+       curl -X PUT localhost:8000/item/table_num/item_id/new_quantity
+       
+Example Request: Updates the quantity of item 14 in table_11 to 31.
+
+       curl -X PUT localhost:8000/item/11/14/31
+       
 
 **Assumptions & Notes:**
 
