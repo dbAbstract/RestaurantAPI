@@ -1,6 +1,10 @@
 # RestaurantAPI
 A Rust REST API created using the Rocket framework with a SQLite database. Handles requests coming from clients (waiters) to handle orders coming in from customers at various tables. Below are the instructions for building, running, and then finally sending requests to the REST API.
 
+To briefly cover the structure of the system. This application, as mentioned above, is an API following the HTTP REST architecture. It can GET, PUT, POST, and DELETE from a database given commands (assumed to be coming in from Frontend elements). The API was created using the Rocket framework and interfaces with a SQLite database. The database stores the various orders for each table in the restaurant in the following manner. When customers are seated at a table, they are attended to by waitstaff. The waitstaff takes the customer's orders and pushes it to the database. For eg. If the waiter is serving some table labelled by the restaurant as **Table T** then when the waitstaff sends a POST request to the database for **Table T**, the API creates a SQLite table in the database called **table_T**. If the table already exists, then it simply updates the pre-existing orders contained in the table. The behaviour of the endpoints will be elaborated further upon. 
+
+tl;dr - System contains 1 database with multiple SQLite tables corresponding to the physical tables in the restaurant with naming convention **table_<table_num>**
+
 **1. How To Build + Run The Application:**
 
 1.1 Clone the repository into your computer. This can be done by downloading the .zip file from GitHub or using the 'git clone' command.
@@ -33,7 +37,7 @@ Please note that you need Rustup to do so.
    
  Now that the REST API is running, we can send various requests to it. Before you do that, please have a look at the endpoints provided by the API, the parameters you can send through as well as the expected return type and value. I have also provided templates for the HTTP requests that you can send the REST API with examples.
  
-2.1 *index( )* | parameters = None | return type = String Splice 
+2.1 ***index***
 
 Parameters:
 
@@ -49,10 +53,26 @@ Request Syntax for index( ):
        
 Example Request: Accessing localhost (127.0.0.1) on port 8000 which prints the following.
 
-
        curl localhost:8000/
        
-2.2 
+2.2 ***post***
+
+Parameters:
+
+       item_id, quantity, table_num
+       
+Returns: String splice
+
+       Status Message (displayed in JSON) 
+
+Request Syntax for index( ):
+
+       curl localhost:8000/item_id/quantity/table_num
+       
+Example Request: Inserting into table table_num a menu item with a unique identifier item_id and with quantity set to quantity.
+
+       curl localhost:8000/
+
        
  
 
