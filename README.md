@@ -1,9 +1,9 @@
 # RestaurantAPI
 A Rust API created using the Rocket framework with a SQLite database. Handles requests coming from clients (waiters) to handle orders coming in from customers at various tables.
 
-**Structure of API:**
-
-**How To Run The Application:**
+**How To Build + Run The Application:**
+1. clone the repository into your computer.
+2. In your command line terminal, naviagate 
 
 **API Routes & Expected Outputs:**
 
