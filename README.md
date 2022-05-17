@@ -58,7 +58,8 @@ Please note that you need Rustup to do so.
        seq 1 1 | xargs -n1 -P4  curl  "http://localhost:8000/item/1"
        
 This will send 4 parallel requests (-P flag controls the number of parallel requests) to the endpoint.
- 
+
+
 2.1 ***index: GET***
 
 Parameters:
@@ -76,7 +77,8 @@ Request Syntax for index( ):
 Example Request: Accessing localhost (127.0.0.1) on port 8000 which prints the following.
 
        curl localhost:8000/
-       
+
+
 2.2 ***add_item: POST***
 
 Parameters:
@@ -94,6 +96,7 @@ Request Syntax for add_item( ):
 Example Request: Inserting into table_23 a menu item with a unique identifier 33 and with quantity set to 2.
 
        curl -X POST localhost:8000/item/33/2/23
+       
 
 2.3 ***delete_item: DELETE***
 
@@ -113,6 +116,7 @@ Example Request: Deleting item with item_id == 1 from table 12.
 
        curl -X DELETE localhost:8000/item/1/12
        
+       
 2.4 ***get_all_items: GET***
 
 Parameters:
@@ -131,6 +135,7 @@ Example Request: get all items for table_1.
 
        curl localhost:8000/item/1
        
+       
 2.5 ***get_specific_item: GET***
 
 Parameters:
@@ -148,6 +153,7 @@ Request Syntax for get_specific_items( ):
 Example Request: get item 14 from table_11.
 
        curl localhost:8000/item/11/14
+       
 
 2.6 ***update quantity: PUT***
 
